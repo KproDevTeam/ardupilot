@@ -49,6 +49,8 @@ AP_Notify *AP_Notify::_singleton;
 #if AP_NOTIFY_TOSHIBALED_ENABLED
 #define TOSHIBA_LED_I2C_BUS_INTERNAL    0
 #define TOSHIBA_LED_I2C_BUS_EXTERNAL    1
+#define TOSHIBA_LED_I2C_BUS_I2C_A_PORT  3
+#define TOSHIBA_LED_I2C_BUS_I2C_B_PORT  2
 #define ALL_TOSHIBALED_I2C (Notify_LED_ToshibaLED_I2C_Internal | Notify_LED_ToshibaLED_I2C_External)
 #else
 #define ALL_TOSHIBALED_I2C 0
@@ -306,6 +308,10 @@ void AP_Notify::add_backends(void)
                 break;
             case Notify_LED_ToshibaLED_I2C_External:
                 ADD_BACKEND(new ToshibaLED_I2C(TOSHIBA_LED_I2C_BUS_EXTERNAL));
+                #if CONFIG_HAL_BOARD_SUBTYPE == HAL_BOARD_SUBTYPE_CHIBIOS_FMUV5
+                                ADD_BACKEND(new ToshibaLED_I2C(TOSHIBA_LED_I2C_BUS_I2C_A_PORT));
+                                ADD_BACKEND(new ToshibaLED_I2C(TOSHIBA_LED_I2C_BUS_I2C_B_PORT));
+                #endif
                 break;
 #endif
 #if AP_NOTIFY_NCP5623_ENABLED

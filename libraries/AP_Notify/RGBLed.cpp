@@ -122,7 +122,7 @@ uint32_t RGBLed::get_colour_sequence(void) const
         AP_Notify::flags.gps_glitching ||
         AP_Notify::flags.leak_detected) {
 
-        if (AP_Notify::flags.leak_detected) {
+        if (AP_Notify::flags.failsafe_radio) {
             // purple if leak detected
             return sequence_failsafe_leak;
         } else if (AP_Notify::flags.ekf_bad) {
@@ -131,9 +131,14 @@ uint32_t RGBLed::get_colour_sequence(void) const
         } else if (AP_Notify::flags.gps_glitching) {
             // blue on gps glitch
             return sequence_failsafe_gps_glitching;
-        }
+        } else if (AP_Notify::flags.failsafe_battery) {
+            // blue on gps glitch
+            return sequence_failsafe_radio_or_battery;  
+        } else if (AP_Notify::flags.failsafe_gcs) {
+            // blue on gps glitch
+            return sequence_failsafe_radio_or_battery;      
         // all off for radio or battery failsafe
-        return sequence_failsafe_radio_or_battery;
+        return sequence_failsafe_leak;
     }
 
     // solid green or blue if armed
